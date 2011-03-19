@@ -1,0 +1,18 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}News{%endblock%}
+
+{%block body%}
+	<h1>{{title}}</h1>
+	<p class="contributors">
+		News par :
+		{%for contributor in contributors%}
+			<a href="/sdz/members/{{contributor.id}}/">{{contributor.name}}</a>
+		{%endfor%}
+	</p>
+	<div class="news_body">
+		{% autoescape off %}
+			{{content}}
+		{% endautoescape %}
+	</div>
+{%endblock%}

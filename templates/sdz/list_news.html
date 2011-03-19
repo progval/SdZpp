@@ -1,0 +1,16 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}News{%endblock%}
+
+{%block body%}
+  {%for news in news_list%}
+    <div class="news">
+      <div>
+        <img src="{{news.logo}}" alt="" class="small" />
+        <a href="./news-{{news.id}}/">{{news.title}}</a>
+      </div>
+      {{news.short}}…
+    </div>
+    <hr />
+  {%endfor%}
+{%endblock%}
