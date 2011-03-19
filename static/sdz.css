@@ -1,8 +1,203 @@
-img.small {
-	max-width: 10%;
-	max-height: 10%;
+img {
+				max-width: 100%;
 }
 
-#body {
-	text-align: justify;
+img.small {
+				max-width: 10%;
+        max-height: 10%;
 }
+
+body, html {
+        max-width: 100;
+}
+
+/*******************************
+ * Syntax coloration for zCode *
+ *******************************/
+.linenodiv {
+        display: none;
+}
+.code2 .hll {
+        background-color:#FFC;
+}
+.code2 .c {
+        color:#408080;font-style:italic;
+}
+.code2 .err {
+        border:1px solid #F00;
+}
+.code2 .k {
+        color:#008000;font-weight:bold;
+}
+.code2 .o {
+        color:#666;
+}
+.code2 .cm {
+        color:#408080;font-style:italic;
+}
+.code2 .cp {
+        color:#BC7A00;
+}
+.code2 .c1 {
+        color:#408080;font-style:italic;
+}
+.code2 .cs {
+        color:#408080;font-style:italic;
+}
+.code2 .gd {
+        color:#A00000;
+}
+.code2 .ge {
+        font-style:italic;
+}
+.code2 .gr{
+        color:#F00;
+}
+.code2 .gh {
+        color:#000080;font-weight:bold;
+}
+.code2 .gi {
+        color:#00A000;
+}
+.code2 .go {
+        color:#808080;
+}
+.code2 .gp {
+        color:#000080;font-weight:bold;
+}
+.code2 .gs {
+        font-weight:bold;
+}
+.code2 .gu {
+        color:#800080;font-weight:bold;
+}
+.code2 .gt {
+        color:#0040D0;
+}
+.code2 .kc {
+        color:#008000;font-weight:bold;
+}
+.code2 .kd {
+        color:#008000;font-weight:bold;
+}
+.code2 .kn {
+        color:#008000;font-weight:bold;
+}
+.code2 .kp {
+        color:#008000;
+}
+.code2 .kr {
+        color:#008000;font-weight:bold;
+}
+.code2 .kt {
+        color:#B00040;
+}
+.code2 .m {
+        color:#666;
+}
+.code2 .s {
+        color:#BA2121;
+}
+.code2 .na {
+        color:#7D9029;
+}
+.code2 .nb {
+        color:#008000;
+}
+.code2 .nc {
+        color:#00F;font-weight:bold;
+}
+.code2 .no {
+        color:#800;
+}
+.code2 .nd {
+        color:#A2F;
+}
+.code2 .ni {
+        color:#999;font-weight:bold;
+}
+.code2 .ne {
+        color:#D2413A;font-weight:bold;
+}
+.code2 .nf {
+        color:#00F;
+}
+.code2 .nl {
+        color:#A0A000;
+}
+.code2 .nn {
+        color:#00F;font-weight:bold;
+}
+.code2 .nt {
+        color:#008000;font-weight:bold;
+}
+.code2 .nv {
+        color:#19177C;
+}
+.code2 .ow {
+        color:#A2F;font-weight:bold;
+}
+.code2 .w {
+        color:#BBB;
+}
+.code2 .mf {
+        color:#666;
+}
+.code2 .mh {
+        color:#666;
+}
+.code2 .mi {
+        color:#666;
+}
+.code2 .mo {
+        color:#666;
+}
+.code2 .sb {
+        color:#BA2121;
+}
+.code2 .sc {
+        color:#BA2121;
+}
+.code2 .sd {
+        color:#BA2121;font-style:italic;
+}
+.code2 .s2 {
+        color:#BA2121;
+}
+.code2 .se {
+        color:#B62;font-weight:bold;
+}
+.code2 .sh {
+        color:#BA2121;
+}
+.code2 .si {
+        color:#B68;font-weight:bold;
+}
+.code2 .sx {
+        color:#008000;
+}
+.code2 .sr {
+        color:#B68;
+}
+.code2 .s1 {
+        color:#BA2121;
+}
+.code2 .ss {
+        color:#19177C;
+}
+.code2 .bp {
+        color:#008000;
+}
+.code2 .vc {
+        color:#19177C;
+}
+.code2 .vg {
+        color:#19177C;
+}
+.code2 .vi {
+        color:#19177C;
+}
+.code2 .il {
+        color:#666;
+}
+
