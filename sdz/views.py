@@ -10,10 +10,9 @@ from django.http import HttpResponse
 from common.templates import render_template
 
 SPLITTER = '" alt="" />'
-regexp_smiley = re.compile(r'<img src="/?Templates/images/smilies/[^"]+" alt="([^"]+)" class="smilies"/>')
+regexp_smiley = re.compile(r'<img src="/?Templates/images/smilies/[^"]+" alt="([^"]+)"( class="smilies")?/>')
 regexp_html_tag = re.compile(r'<.*?>')
-regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-'
-                                     '(?P<id>[0-9]+)-.*.html')
+regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-(?P<id>[0-9]+)-.*.html')
 regexp_member_link = re.compile(r'<a (class="auteur_tut")? href="membres-294-(?P<id>[0-9]+).html">(<span [^>]+>)?(?P<name>[^<]+)(</span>)?</a>')
 regexp_h1 = re.compile(r'<h1>(?P<title>.*)</h1>')
 regexp_start_news_comments = re.compile(r'<table class="liste_messages">')
@@ -28,6 +27,9 @@ regexp_tuto_cat_link = re.compile(r'<div class="infobox bouton_tuto">[^<]*<h3>(?
 regexp_tuto_tuto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[^.]+.html">(<strong>)?(?P<name>[^<]+)(</strong>)?</a>')
 regexp_license = re.compile(r'<img src="Templates/images/licences/[^"]+" alt="[^"]+" title="(?P<name>[^"]+)" /></a>')
 regexp_tuto_subpart_link = re.compile(r'<a href="#ss_part_(?P<id>[0-9]+)" >(?P<name>[^<]+)</a>')
+regexp_bigtuto_subpart = re.compile(r'[^P]*Partie (?P<id>[0-9]+) : (?P<name>.+)$')
+regexp_bigtuto_minituto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[^.]*.html" >')
+regexp_bigtuto_minituto_name = re.compile(r'[0-9]+\) (?P<name>.*)$')
 
 class Empty:
     """Container, passed to the template."""
@@ -291,7 +293,8 @@ def tuto_view(request, id):
                     stage = 7
                 elif stage == 6:
                     intro += line + '\n'
-                elif stage == 7 and '<div class="liens_bas_tuto">' in line:
+                elif stage == 7 and '<h2>' in line:
+                    content += line + '\n'
                     stage = 8
                 elif stage == 7:
                     matched = regexp_tuto_subpart_link.search(line)
@@ -314,6 +317,46 @@ def tuto_view(request, id):
                     break
                 elif stage == 10:
                     content += line + '\n'
+            else: # big tuto
+                if stage == 6 and '<div id="pre_liste_parties">' in line:
+                    stage = 7
+                    currentPart = None
+                elif stage == 6:
+                    intro += line + '\n'
+                elif stage == 7:
+                    if currentPart is None:
+                        matched = regexp_bigtuto_subpart.match(line)
+                        if matched is None:
+                            continue
+                        else:
+                            currentPart = Empty()
+                            currentPart.minitutos = []
+                            currentPart.id = matched.group('id')
+                            currentPart.name = matched.group('name')
+                            currentMinituto = None
+                    elif '<hr ' in line:
+                        print '------------'
+                        subparts.append(currentPart)
+                        currentPart = None
+                    elif currentMinituto is None:
+                        matched = regexp_bigtuto_minituto_link.search(line)
+                        if matched is None:
+                            continue
+                        else:
+                            currentMinituto = Empty()
+                            currentMinituto.id = matched.group('id')
+                            currentMinituto.name = None
+                            currentPart.minitutos.append(currentMinituto)
+                    elif currentMinituto.name is None:
+                        matched = regexp_bigtuto_minituto_name.search(line)
+                        if matched is None:
+                            continue
+                        else:
+                            currentMinituto.name = matched.group('name')
+                            print repr(currentMinituto.name)
+                            currentMinituto = None
+
+    print repr(subparts)
     intro = zcode_parser(intro)
     content = zcode_parser(content)
     assert tuto_type in ('mini', 'big')
