@@ -11,6 +11,10 @@ body, html {
         max-width: 100;
 }
 
+#body {
+	margin-top: 10px;
+}
+
 /*******************************
  * Syntax coloration for zCode *
  *******************************/
