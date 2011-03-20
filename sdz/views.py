@@ -304,6 +304,8 @@ def tuto_view(request, id):
                         subparts.append(subpart)
                 elif stage == 8 and '<form ' in line:
                     stage = 9
+                elif stage == 8 and '<div class="liens_bas_tuto">' in line:
+                    break
                 elif stage == 8:
                     content += line + '\n'
                 elif stage == 9 and '</form>' in line:
@@ -314,7 +316,6 @@ def tuto_view(request, id):
                     content += line + '\n'
     intro = zcode_parser(intro)
     content = zcode_parser(content)
-    print stage
     assert tuto_type in ('mini', 'big')
     return HttpResponse(render_template('sdz/tutos_view_%s_tuto.html' % tuto_type, request,
                                         {'title': title,
