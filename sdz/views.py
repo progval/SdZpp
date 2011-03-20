@@ -206,7 +206,7 @@ def tutos_index(request):
 def tutos_list_subcategories(request, id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-1-%s-cours.html' % id)
-    content = response.read().split('\n')
+    lines = response.read().split('\n')
     stage = 0
     interesting_content = ''
     for line in lines:
@@ -228,7 +228,7 @@ def tutos_list_subcategories(request, id):
 def tutos_list_tutorials(request, id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-2-%s-cours.html' % id)
-    content = response.read().split('\n')
+    lines = response.read().split('\n')
     stage = 0
     interesting_content = ''
     for line in lines:
@@ -246,3 +246,4 @@ def tutos_list_tutorials(request, id):
         tutorials.append(tutorial)
     return HttpResponse(render_template('sdz/tutos_list_tutorials.html', request,
                                         {'tutorials': tutorials}))
+

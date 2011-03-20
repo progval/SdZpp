@@ -10,4 +10,5 @@ urlpatterns = patterns('sdz.views',
     (r'^tutos/$', 'tutos_index'),
     (r'^tutos/list/categories/(?P<id>[0-9]+)/$', 'tutos_list_subcategories'),
     (r'^tutos/list/tutorials/(?P<id>[0-9]+)/$', 'tutos_list_tutorials'),
+    (r'^tutos/view/(?P<id>[0-9]+)/$', 'tuto_view'),
 )
