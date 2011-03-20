@@ -1,0 +1,21 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}Cours{%endblock%}
+
+{%block body%}
+	<ul>
+		{%for category in categories%}
+			<li>
+				{%if category.mode == "1"%}
+					<a href="/sdz/tutos/list/categories/{{category.id}}">{{category.name}}</a>
+				{%else%}
+					<a href="/sdz/tutos/list/tutorials/{{category.id}}">{{category.name}}</a>
+				{%endif%}
+				<br />
+				{%autoescape off%}
+					{{category.description}}
+				{%endautoescape%}
+			</li>
+		{%endfor%}
+{%endblock%}
+

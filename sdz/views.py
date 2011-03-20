@@ -20,6 +20,11 @@ regexp_comments_page_link = re.compile(r'<a href=".*.html#discussion">(?P<id>[0-
 regexp_comments_current_page_link = re.compile(r'<span class="rouge">[0-9]+</span>')
 regexp_start_comment = re.compile(r'.*<div class="message_txt">(?P<message>.*)$')
 regexp_tuto_link = re.compile(r'<a href="/tutoriel-3-(?P<id>[0-9]+)-[^>]+.html">(?P<name>[^<]+)</a>')
+regexp_tuto_cat_link = re.compile(r'<div class="infobox bouton_tuto">[^<]*<h3>(?P<name>[^<]+)</h3>[^<]*'
+                                   '<span class="image_cat">[^<]*'
+                                   '<a href="tutoriel-(?P<mode>[12])-(?P<id>[0-9]+)-[^.]+.html"[^t]*'
+                                   'title="(?P<description>[^>]+)">')
+regexp_tuto_tuto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[^.]+.html">(?P<name>[^<]+)</a>')
 
 class Empty:
     """Container, passed to the template."""
@@ -186,3 +191,49 @@ def tutos_index(request):
         tutos.append(tuto)
     return HttpResponse(render_template('sdz/tutos_index.html', request,
                                         {'tutos': tutos}))
+
+def tutos_list_subcategories(request, id):
+    opener = UrlOpener()
+    response = opener.open('http://www.siteduzero.com/tutoriel-1-%s-cours.html' % id)
+    content = response.read()
+    lines = content.split('\n')
+    stage = 0
+    interesting_content = ''
+    for line in lines:
+        if stage == 0 and 'Les tutoriels préférés des Zéros' in line:
+            stage = 1
+        elif stage == 1 and '<div id="footer">' in line:
+            break
+        elif stage == 1:
+            interesting_content += line
+    raw_categories = regexp_tuto_cat_link.findall(interesting_content)
+    categories = []
+    for raw_category in raw_categories:
+        category = Empty()
+        category.name, category.mode, category.id, category.description = raw_category
+        categories.append(category)
+    return HttpResponse(render_template('sdz/tutos_list_subcategories.html', request,
+                                        {'categories': categories}))
+
+def tutos_list_tutorials(request, id):
+    opener = UrlOpener()
+    response = opener.open('http://www.siteduzero.com/tutoriel-2-%s-cours.html' % id)
+    content = response.read()
+    lines = content.split('\n')
+    stage = 0
+    interesting_content = ''
+    for line in lines:
+        if stage == 0 and '<table class="liste_cat" summary="Liste des tutoriels">' in line:
+            stage = 1
+        elif stage == 1 and '<div id="footer">' in line:
+            break
+        elif stage == 1:
+            interesting_content += line
+    raw_tutorials = regexp_tuto_tuto_link.findall(interesting_content)
+    tutorials = []
+    for raw_tutorial in raw_tutorials:
+        tutorial = Empty()
+        tutorial.id, tutorial.name = raw_tutorial
+        tutorials.append(tutorial)
+    return HttpResponse(render_template('sdz/tutos_list_tutorials.html', request,
+                                        {'tutorials': tutorials}))

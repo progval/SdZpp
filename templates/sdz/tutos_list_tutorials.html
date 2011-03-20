@@ -1,0 +1,14 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}Cours{%endblock%}
+
+{%block body%}
+	<ul>
+		{%for tutorial in tutorials%}
+			<li>
+				<a href="/sdz/tutos/view/{{tutorial.id}}/">{{tutorial.name}}</a>
+			</li>
+		{%endfor%}
+	</ul>
+{%endblock%}
+

@@ -1,13 +1,13 @@
 {%extends "sdz/base.html"%}
 
-{%block title%}News{%endblock%}
+{%block title%}Cours{%endblock%}
 
 {%block body%}
-	<a href="/tutos/categories/">Voir les tutoriels par catégorie</a>
+	<a href="/sdz/tutos/list/categories/3/">Voir les tutoriels par catégorie</a>
 	<h1>Tutoriels mis en avant</h1>
 	<ul>
 		{%for tuto in tutos%}
-			<li><a href="/tutos/view/{{tuto.id}}/">{{tuto.name}}</a></li>
+			<li><a href="/sdz/tutos/view/{{tuto.id}}/">{{tuto.name}}</a></li>
 		{%endfor%}
 	</ul>
 {%endblock%}
