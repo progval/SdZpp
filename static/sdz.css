@@ -200,4 +200,11 @@ body, html {
 .code2 .il {
         color:#666;
 }
-
+.citation, .spoiler_hidden {
+				border: solid 1px black;
+				border-bottom: 0;
+}
+.citation2, .spoiler3_hidden {
+				border: solid 1px black;
+				padding: 2px;
+}

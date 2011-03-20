@@ -1,0 +1,29 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}Commentaires de news{%endblock%}
+
+{%block body%}
+	{%if previous_page%}<a href="{{previous_page}}">Précédent</a>{%endif%}
+	<a href="../">Retour à la news</a><br />
+	{%if next_page%}<a href="{{next_page}}">Suivant</a>{%endif%}
+	{%for id in page_ids%}
+		{%if id == page_id%}
+			{{id}}
+		{%else%}
+			{%if id != '...'%}
+				<a href="../{{id}}">{{id}}</a>
+			{%else%}
+				…
+			{%endif%}
+		{%endif%}
+	{%endfor%}
+	<hr />
+	{%for comment in comments%}
+		<a href="/sdz/members/{{comment.author.id}}/">{{comment.author.name}}</a>&nbsp;
+		Posté le {{comment.posted_on}}<br />
+		{% autoescape off %}
+			{{comment.content}}
+		{% endautoescape %}
+		<hr />
+	{%endfor%}
+{%endblock%}
