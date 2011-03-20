@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from common.templates import render_template
 
 SPLITTER = '" alt="" />'
+regexp_smiley = re.compile(r'<img src="/Templates/images/smilies/[^"]+" alt="([^"]+)" class="smilies"/>')
 regexp_html_tag = re.compile(r'<.*?>')
 regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-'
                                      '(?P<id>[0-9]+)-.*.html')
@@ -37,6 +38,13 @@ class Member:
     def __init__(self, matched):
         self.name = matched.group('name')
         self.id = matched.group('id')
+
+def zcode_parser(code):
+    print repr(code)
+    code, foo = regexp_smiley.subn(r'\1', code)
+    print repr(code)
+    print foo
+    return code
 
 def get_news_list():
     feed = feedparser.parse('http://www.siteduzero.com/Templates/xml/news_fr.xml')
@@ -92,6 +100,7 @@ def show_news(request, news_id):
             break
         elif stage == 3:
             content += line + '\n'
+    content = zcode_parser(content)
     return HttpResponse(render_template('sdz/view_news.html', request,
                                         {'title': title,
                                          'contributors': contributors,
@@ -153,11 +162,13 @@ def show_news_comments(request, news_id, page):
                     currentMessage.content = matched.group('message')
             elif '<div class="signature">' in line:
                 currentMessage.content = currentMessage.content[:-len('</div>\n\t\n')]
+                currentMessage.content = zcode_parser(currentMessage.content)
                 messages.append(currentMessage)
                 currentMessage = None
             elif '<tr class="header_message">' in line: # No signature
                 currentMessage.content = currentMessage.content[:-len('</div>'
                                                 '\n\t\t\t\t </td>\n\t</tr>\n')]
+                currentMessage.content = zcode_parser(currentMessage.content)
                 messages.append(currentMessage)
                 currentMessage = None
             else:
