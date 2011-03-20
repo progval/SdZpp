@@ -6,4 +6,6 @@ urlpatterns = patterns('sdz.views',
     (r'^news/news-(?P<news_id>[0-9]+)/$', 'show_news'),
     (r'^news/news-(?P<news_id>[0-9]+)/(?P<page>[0-9]+)/$',
         'show_news_comments'),
+
+    (r'^tutos/$', 'tutos_index'),
 )

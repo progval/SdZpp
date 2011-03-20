@@ -19,6 +19,7 @@ regexp_start_news_comments = re.compile(r'<table class="liste_messages">')
 regexp_comments_page_link = re.compile(r'<a href=".*.html#discussion">(?P<id>[0-9]+)</a>')
 regexp_comments_current_page_link = re.compile(r'<span class="rouge">[0-9]+</span>')
 regexp_start_comment = re.compile(r'.*<div class="message_txt">(?P<message>.*)$')
+regexp_tuto_link = re.compile(r'<a href="/tutoriel-3-(?P<id>[0-9]+)-[^>]+.html">(?P<name>[^<]+)</a>')
 
 class Empty:
     """Container, passed to the template."""
@@ -163,3 +164,25 @@ def show_news_comments(request, news_id, page):
                                          'comments': messages}))
 
 
+def tutos_index(request):
+    opener = UrlOpener()
+    response = opener.open('http://www.siteduzero.com/tutoriel-1-3-cours.html')
+    lines = response.read().split('\n')
+    stage = 0
+    interesting_content = ''
+    for line in lines:
+        if stage == 0 and '<div class="box_menu">' in line:
+            stage = 1
+        elif stage == 1 and 'Templates/images/die.png' in line:
+            break
+        else:
+            interesting_content += line
+    raw_tutos = regexp_tuto_link.findall(interesting_content)
+    tutos = []
+    for raw_tuto in raw_tutos:
+        tuto = Empty()
+        tuto.id, tuto.name = raw_tuto
+        tuto.name = tuto.name.strip()
+        tutos.append(tuto)
+    return HttpResponse(render_template('sdz/tutos_index.html', request,
+                                        {'tutos': tutos}))
