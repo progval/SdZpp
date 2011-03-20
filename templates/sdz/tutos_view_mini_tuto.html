@@ -1,0 +1,30 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}{{title}}{%endblock%}
+
+{%block body%}
+	<h1>{{title}}</h1>
+	Auteur(s) :
+	<ul>
+		{%for author in authors%}
+			<li><a href="/sdz/members/{{author.id}}/">{{author.name}}</a></li>
+		{%endfor%}
+	</ul>
+	Licence : {{license}}
+
+	{%autoescape off%}
+		{{intro}}
+	{%endautoescape%}
+	<hr />
+	<ul>
+		{%for subpart in subparts%}
+			{%autoescape off%}
+				<li><a href="#ss_part_{{subpart.id}}">{{subpart.name}}</a></li>
+			{%endautoescape%}
+		{%endfor%}
+	</ul>
+
+	{%autoescape off%}
+		{{content}}
+	{%endautoescape%}
+{%endblock%}

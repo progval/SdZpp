@@ -10,11 +10,11 @@ from django.http import HttpResponse
 from common.templates import render_template
 
 SPLITTER = '" alt="" />'
-regexp_smiley = re.compile(r'<img src="/Templates/images/smilies/[^"]+" alt="([^"]+)" class="smilies"/>')
+regexp_smiley = re.compile(r'<img src="/?Templates/images/smilies/[^"]+" alt="([^"]+)" class="smilies"/>')
 regexp_html_tag = re.compile(r'<.*?>')
 regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-'
                                      '(?P<id>[0-9]+)-.*.html')
-regexp_member_link = re.compile(r'<a href="membres-294-(?P<id>[0-9]+).html">(<span [^>]+>)?(?P<name>[^<]+)(</span>)?</a>')
+regexp_member_link = re.compile(r'<a (class="auteur_tut")? href="membres-294-(?P<id>[0-9]+).html">(<span [^>]+>)?(?P<name>[^<]+)(</span>)?</a>')
 regexp_h1 = re.compile(r'<h1>(?P<title>.*)</h1>')
 regexp_start_news_comments = re.compile(r'<table class="liste_messages">')
 regexp_comments_page_link = re.compile(r'<a href=".*.html#discussion">(?P<id>[0-9]+)</a>')
@@ -25,7 +25,9 @@ regexp_tuto_cat_link = re.compile(r'<div class="infobox bouton_tuto">[^<]*<h3>(?
                                    '<span class="image_cat">[^<]*'
                                    '<a href="tutoriel-(?P<mode>[12])-(?P<id>[0-9]+)-[^.]+.html"[^t]*'
                                    'title="(?P<description>[^>]+)">')
-regexp_tuto_tuto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[^.]+.html">(?P<name>[^<]+)</a>')
+regexp_tuto_tuto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[^.]+.html">(<strong>)?(?P<name>[^<]+)(</strong>)?</a>')
+regexp_license = re.compile(r'<img src="Templates/images/licences/[^"]+" alt="[^"]+" title="(?P<name>[^"]+)" /></a>')
+regexp_tuto_subpart_link = re.compile(r'<a href="#ss_part_(?P<id>[0-9]+)" >(?P<name>[^<]+)</a>')
 
 class Empty:
     """Container, passed to the template."""
@@ -40,10 +42,7 @@ class Member:
         self.id = matched.group('id')
 
 def zcode_parser(code):
-    print repr(code)
     code, foo = regexp_smiley.subn(r'\1', code)
-    print repr(code)
-    print foo
     return code
 
 def get_news_list():
@@ -242,8 +241,87 @@ def tutos_list_tutorials(request, id):
     tutorials = []
     for raw_tutorial in raw_tutorials:
         tutorial = Empty()
-        tutorial.id, tutorial.name = raw_tutorial
+        tutorial.id, foo, tutorial.name, foo = raw_tutorial
         tutorials.append(tutorial)
     return HttpResponse(render_template('sdz/tutos_list_tutorials.html', request,
                                         {'tutorials': tutorials}))
+
+def tuto_view(request, id):
+    opener = UrlOpener()
+    response = opener.open('http://www.siteduzero.com/tutoriel-3-%s-foo.html' % id)
+    lines = response.read().split('\n')
+    stage = 0
+    authors = []
+    tuto_type = None
+    subparts = []
+    content = ''
+    for line in lines:
+        if stage == 0 and line == '<h1>':
+            stage = 1
+        elif stage == 1:
+            title = line.strip()
+            stage = 2
+        elif stage == 2 and '<strong>Auteur' in line: # May be "Auteur" or "Auteurs"
+            stage = 3
+        elif stage == 3:
+            matched = regexp_member_link.search(line)
+            if '<br />' in line:
+                stage = 4
+            elif matched is None:
+                continue
+            else:
+                authors.append(Member(matched))
+        elif stage == 4 and '<strong>Licence</strong>' in line:
+            license = line.split(' : ')[1][0:-len('<br /><br />')]
+            matched = regexp_license.search(license)
+            if matched is not None:
+                license = matched.group('name')
+            stage = 5
+        elif stage == 5 and '<div id="chap_intro">' in line:
+            intro = line[len('<div id="chap_intro">'):]
+            tuto_type = 'mini'
+            stage = 6
+        elif stage == 5 and '<div id="btuto_intro">' in line:
+            intro = line[len('<div id="btuto_intro">'):]
+            tuto_type = 'big'
+            stage = 6
+        elif stage >= 6:
+            if tuto_type == 'mini':
+                if stage == 6 and '<div class="sommaire_chap">' in line:
+                    stage = 7
+                elif stage == 6:
+                    intro += line + '\n'
+                elif stage == 7 and '<div class="liens_bas_tuto">' in line:
+                    stage = 8
+                elif stage == 7:
+                    matched = regexp_tuto_subpart_link.search(line)
+                    if matched is None:
+                        continue
+                    else:
+                        subpart = Empty()
+                        subpart.id = matched.group('id')
+                        subpart.name = matched.group('name')
+                        subparts.append(subpart)
+                elif stage == 8 and '<form ' in line:
+                    stage = 9
+                elif stage == 8:
+                    content += line + '\n'
+                elif stage == 9 and '</form>' in line:
+                    stage = 10
+                elif stage == 10 and '<div class="liens_bas_tuto">' in line:
+                    break
+                elif stage == 10:
+                    content += line + '\n'
+    intro = zcode_parser(intro)
+    content = zcode_parser(content)
+    print stage
+    assert tuto_type in ('mini', 'big')
+    return HttpResponse(render_template('sdz/tutos_view_%s_tuto.html' % tuto_type, request,
+                                        {'title': title,
+                                         'authors': authors,
+                                         'license': license,
+                                         'subparts': subparts,
+                                         'intro': intro,
+                                         'content': content}))
+
 
