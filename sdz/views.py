@@ -173,7 +173,7 @@ def show_news_comments(request, news_id, page):
                 messages.append(currentMessage)
                 currentMessage = None
             else:
-                currentMessage.content += line
+                currentMessage.content += line + '\n'
     return HttpResponse(render_template('sdz/view_news_comments.html', request,
                                         {'title': title,
                                          'page_id': page,
@@ -193,7 +193,7 @@ def tutos_index(request):
         elif stage == 1 and 'Templates/images/die.png' in line:
             break
         else:
-            interesting_content += line
+            interesting_content += line + '\n'
     raw_tutos = regexp_tuto_link.findall(interesting_content)
     tutos = []
     for raw_tuto in raw_tutos:
@@ -216,7 +216,7 @@ def tutos_list_subcategories(request, id):
         elif stage == 1 and '<div id="footer">' in line:
             break
         elif stage == 1:
-            interesting_content += line
+            interesting_content += line + '\n'
     raw_categories = regexp_tuto_cat_link.findall(interesting_content)
     categories = []
     for raw_category in raw_categories:
@@ -238,7 +238,7 @@ def tutos_list_tutorials(request, id):
         elif stage == 1 and '<div id="footer">' in line:
             break
         elif stage == 1:
-            interesting_content += line
+            interesting_content += line + '\n'
     raw_tutorials = regexp_tuto_tuto_link.findall(interesting_content)
     tutorials = []
     for raw_tutorial in raw_tutorials:
