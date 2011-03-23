@@ -335,7 +335,6 @@ def tuto_view(request, id):
                             currentPart.name = matched.group('name')
                             currentMinituto = None
                     elif '<hr ' in line:
-                        print '------------'
                         subparts.append(currentPart)
                         currentPart = None
                     elif currentMinituto is None:
@@ -353,10 +352,8 @@ def tuto_view(request, id):
                             continue
                         else:
                             currentMinituto.name = matched.group('name')
-                            print repr(currentMinituto.name)
                             currentMinituto = None
 
-    print repr(subparts)
     intro = zcode_parser(intro)
     content = zcode_parser(content)
     assert tuto_type in ('mini', 'big')
