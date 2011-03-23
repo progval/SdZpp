@@ -35,7 +35,7 @@ def get_news_list():
     return news_list
 
 def index(request):
-    return HttpResponse(render_template('sdz/list_news.html', request,
+    return HttpResponse(render_template('sdz/news/list.html', request,
                                         {'news_list': get_news_list()}))
 
 def show(request, news_id):
@@ -70,7 +70,7 @@ def show(request, news_id):
         elif stage == 3:
             content += line + '\n'
     content = zcode_parser(content)
-    return HttpResponse(render_template('sdz/view_news.html', request,
+    return HttpResponse(render_template('sdz/news/view.html', request,
                                         {'title': title,
                                          'contributors': contributors,
                                          'content': content}))
@@ -142,7 +142,7 @@ def show_comments(request, news_id, page):
                 currentMessage = None
             else:
                 currentMessage.content += line + '\n'
-    return HttpResponse(render_template('sdz/view_news_comments.html', request,
+    return HttpResponse(render_template('sdz/news/view_comments.html', request,
                                         {'title': title,
                                          'page_id': page,
                                          'page_ids': page_ids,

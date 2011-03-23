@@ -43,7 +43,7 @@ def index(request):
         tuto.id, tuto.name = raw_tuto
         tuto.name = tuto.name.strip()
         tutos.append(tuto)
-    return HttpResponse(render_template('sdz/tutos_index.html', request,
+    return HttpResponse(render_template('sdz/tutos/index.html', request,
                                         {'tutos': tutos}))
 
 def list_subcategories(request, id):
@@ -65,7 +65,7 @@ def list_subcategories(request, id):
         category = Empty()
         category.name, category.mode, category.id, category.description = raw_category
         categories.append(category)
-    return HttpResponse(render_template('sdz/tutos_list_subcategories.html', request,
+    return HttpResponse(render_template('sdz/tutos/list_subcategories.html', request,
                                         {'categories': categories}))
 
 def list_tutorials(request, id):
@@ -87,7 +87,7 @@ def list_tutorials(request, id):
         tutorial = Empty()
         tutorial.id, foo, tutorial.name, foo = raw_tutorial
         tutorials.append(tutorial)
-    return HttpResponse(render_template('sdz/tutos_list_tutorials.html', request,
+    return HttpResponse(render_template('sdz/tutos/list_tutorials.html', request,
                                         {'tutorials': tutorials}))
 
 def view(request, id):
@@ -199,7 +199,7 @@ def view(request, id):
     intro = zcode_parser(intro)
     content = zcode_parser(content)
     assert tuto_type in ('mini', 'big')
-    return HttpResponse(render_template('sdz/tutos_view_%s_tuto.html' % tuto_type, request,
+    return HttpResponse(render_template('sdz/tutos/view_%s_tuto.html' % tuto_type, request,
                                         {'title': title,
                                          'authors': authors,
                                          'license': license,
