@@ -1,0 +1,30 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}Forum{%endblock%}
+
+{%block body%}
+	<dl>
+		{%for category in categories%}
+			<dt>
+				{{category.name}}
+			</dt>
+			<dd>
+				<dl>
+					{%for subCategory in category.subCategories%}
+						<dt>
+							<a href="/sdz/forums/categories/{{subCategory.id}}">
+								{{subCategory.name}}
+							</a>
+						</dt>
+						<dd>
+							{%autoescape off%}
+								{{subCategory.description}}
+							{%endautoescape%}
+						</dd>
+					{%endfor%}
+				</dl>
+			</dd>
+		{%endfor%}
+	</dl>
+{%endblock%}
+
