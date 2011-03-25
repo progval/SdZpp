@@ -6,14 +6,18 @@
 	<dl>
 		{%for category in categories%}
 			<dt>
-				{{category.name}}
+				{%autoescape off%}
+					{{category.name}}
+				{%endautoescape%}
 			</dt>
 			<dd>
 				<dl>
 					{%for subCategory in category.subCategories%}
 						<dt>
 							<a href="/sdz/forums/categories/{{subCategory.id}}">
+							{%autoescape off%}
 								{{subCategory.name}}
+							{%endautoescape%}
 							</a>
 						</dt>
 						<dd>
