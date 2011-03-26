@@ -19,11 +19,13 @@
 	{%endfor%}
 	<hr />
 	{%for comment in comments%}
-		<a href="/sdz/members/{{comment.author.id}}/">{{comment.author.name}}</a>&nbsp;
-		Posté le {{comment.posted_on}}<br />
-		{% autoescape off %}
-			{{comment.content}}
-		{% endautoescape %}
+		<div>
+			<a href="/sdz/members/{{comment.author.id}}/">{{comment.author.name}}</a>&nbsp;
+			Posté le {{comment.posted_on}}<br />
+			{% autoescape off %}
+				{{comment.content}}
+			{% endautoescape %}
+		</div>
 		<hr />
 	{%endfor%}
 {%endblock%}

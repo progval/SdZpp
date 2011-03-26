@@ -98,8 +98,11 @@ def show(request, news_id):
         elif stage == 3 and line == '<div class="taille_news" ' \
                                     'style="margin-bottom: 15px;">':
             break
+        elif stage == 3 and '<div class="auteur_date_commentaires">' in line:
+            break
         elif stage == 3:
             content += line + '\n'
+    content = content[0:-len('</div>\n')]
     content = zcode_parser(content)
     return HttpResponse(render_template('sdz/news/view.html', request,
                                         {'title': title,
@@ -166,7 +169,7 @@ def show_comments(request, news_id, page):
                 messages.append(currentMessage)
                 currentMessage = None
             elif '<tr class="header_message">' in line: # No signature
-                currentMessage.content = currentMessage.content[:-len('</div>'
+                currentMessage.content = currentMessage.content[:-len('</div></div>'
                                                 '\n\t\t\t\t</td>\n\t</tr>\n')]
                 currentMessage.content = zcode_parser(currentMessage.content)
                 messages.append(currentMessage)

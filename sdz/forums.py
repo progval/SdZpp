@@ -42,6 +42,9 @@ from sdz.common import *
 regexp_big_cat = re.compile('<a href="forum-89-(?P<id>[0-9]+)-[^>]*.html">(?P<name>[^<]+)</a>')
 regexp_sub_cat = re.compile('<a href="forum-81-(?P<id>[0-9]+)-[^>]*.html">(?P<name>[^<]+)</a>')
 regexp_sub_cat_desc = re.compile('<span class="fontsize_08">(?P<description>[^<]+)</span>')
+regexp_current_page = re.compile('<span class="rouge">(?P<page>[0-9]+)</span>')
+regexp_other_page = re.compile('<a href="forum-81-[0-9]*-p[0-9]*-[^.]*.html">(?P<page>[0-9]+)</a>')
+regexp_topic_link = re.compile('<a href="forum-83-(?P<id>[0-9]+)-p1-[^.]*.html" title="[^"]*">(?P<title>[^<]+)</a>(<br /><span class="fontsize_08">(?P<subtitle>[^<]+)</span>)?')
 
 def index(request):
     opener = UrlOpener()
@@ -75,3 +78,48 @@ def index(request):
                 currentSubCategory.description += matched.group('description') + '\n'
     return HttpResponse(render_template('sdz/forums/index.html', request,
                                         {'categories': categories}))
+
+def category(request, id, page=None):
+    opener = UrlOpener()
+    if page is None:
+        response = opener.open('http://www.siteduzero.com/forum-81-%s-foo.html' % id)
+    else:
+        response = opener.open('http://www.siteduzero.com/forum-81-%s-p%s-foo.html' % (id, page))
+    lines = response.read().split('\n')
+    stage = 0
+    pages = []
+    topics = []
+    for line in lines:
+        if stage == 0 and '<table class="liste_cat">' in line:
+            stage = 1
+        elif stage == 1:
+            matched = regexp_current_page.search(line)
+            if matched is not None:
+                pages.append(matched.group('page'))
+                continue
+            matched = regexp_other_page.search(line)
+            if matched is not None:
+                pages.append(matched.group('page'))
+                continue
+            if '<a href="#"' in line:
+                pages.append('...')
+            if '</td>' in line:
+                stage = 2
+        elif stage == 2:
+            matched = regexp_topic_link.search(line)
+            if matched is not None:
+                topic = Empty()
+                topic.id = matched.group('id')
+                topic.title = matched.group('title')
+                topic.subtitle = ''
+                if matched.group('subtitle') is not None:
+                    topic.subtitle = matched.group('subtitle')
+                topics.append(topic)
+            if '</table>' in line:
+                break
+    print repr(pages)
+    print repr(topics)
+    print stage
+    return HttpResponse(render_template('sdz/forums/category.html', request,
+                                        {'topics': topics,
+                                         'pages': pages}))
