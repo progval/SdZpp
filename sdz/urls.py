@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     (r'^tutos/view/(?P<id>[0-9]+)/$', 'sdz.tutos.view'),
 
     (r'^forums/$', 'sdz.forums.index'),
+    (r'^forums/categories/(?P<id>[0-9]+)/((?P<page>[0-9]+)/)?$', 'sdz.forums.category'),
 )
