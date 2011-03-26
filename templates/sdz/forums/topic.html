@@ -1,0 +1,28 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}Topic{%endblock%}
+
+{%block body%}
+	{%for id in page_ids%}
+		{%if id == page_id%}
+			{{id}}
+		{%else%}
+			{%if id != '...'%}
+				<a href="./{{id}}">{{id}}</a>
+			{%else%}
+				…
+			{%endif%}
+		{%endif%}
+	{%endfor%}
+	{%for message in messages%}
+		<div>
+			<a href="/sdz/members/{{message.author.id}}/">{{message.author.name}}</a>&nbsp;
+			Posté {{message.posted_on}}<br />
+			{% autoescape off %}
+				{{message.content}}
+			{% endautoescape %}
+		</div>
+		<hr />
+	{%endfor%}
+{%endblock%}
+

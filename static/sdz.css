@@ -212,3 +212,8 @@ body, html {
 				border: solid 1px black;
 				padding: 2px;
 }
+
+.message_edite {
+	font-size: 0.8em;
+	text-align: right;
+}
