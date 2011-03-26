@@ -1,0 +1,20 @@
+{%extends "sdz/base.html"%}
+
+{%block title%}{{pseudo}}{%endblock%}
+
+{%block body%}
+	<h2>Informations</h2>
+	<dl>
+		{%for info in basic_infos%}
+			<dt>{{info.name}}</dt><dd>{{info.value}}</dd>
+		{%endfor%}
+		<dt>En ligne</dt><dd>{%if online%}Oui{%else%}Non{%endif%}</dd>
+	</dl>
+
+	<h2>Activité</h2>
+	<dl>
+		{%for type in activity%}
+			<dt>{{type.name}}</dt><dd>{{type.value}}</dd>
+		{%endfor%}
+	</dl>
+{%endblock%}
