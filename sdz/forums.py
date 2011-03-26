@@ -117,9 +117,6 @@ def category(request, id, page=None):
                 topics.append(topic)
             if '</table>' in line:
                 break
-    print repr(pages)
-    print repr(topics)
-    print stage
     return HttpResponse(render_template('sdz/forums/category.html', request,
                                         {'topics': topics,
-                                         'pages': pages}))
+                                         'page_ids': pages}))

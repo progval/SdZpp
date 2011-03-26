@@ -3,11 +3,22 @@
 {%block title%}Catégorie{%endblock%}
 
 {%block body%}
+	{%for id in page_ids%}
+		{%if id == page_id%}
+			{{id}}
+		{%else%}
+			{%if id != '...'%}
+				<a href="./{{id}}">{{id}}</a>
+			{%else%}
+				…
+			{%endif%}
+		{%endif%}
+	{%endfor%}
 	<dl>
 		{%for topic in topics%}
 			<dt>
 				{%autoescape off%}
-					<a href="./{{topic.id}}/">{{topic.title}}</a>
+					<a href="../{{topic.id}}/">{{topic.title}}</a>
 				{%endautoescape%}
 			</dt>
 			<dd>
