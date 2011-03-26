@@ -45,6 +45,7 @@ regexp_sub_cat_desc = re.compile('<span class="fontsize_08">(?P<description>[^<]
 regexp_current_page = re.compile('<span class="rouge">(?P<page>[0-9]+)</span>')
 regexp_other_page = re.compile('<a href="forum-8[13]-[0-9]*-p[0-9]*-[^.]*.html">(?P<page>[0-9]+)</a>')
 regexp_topic_link = re.compile('<a href="forum-83-(?P<id>[0-9]+)-p1-[^.]*.html" title="[^"]*">(?P<title>[^<]+)</a>(<br /><span class="fontsize_08">(?P<subtitle>[^<]+)</span>)?')
+regexp_category_title = re.compile('<h1>(?P<title>.*)</h1>')
 regexp_topic_title = re.compile('<h1 class="titre_forum">(?P<title>.*)</h1>')
 regexp_start_message = re.compile(r'.*<div class="boite_message">(?P<message>.*)$')
 
@@ -92,9 +93,16 @@ def category(request, id, page=None):
     pages = []
     topics = []
     for line in lines:
-        if stage == 0 and '<table class="liste_cat">' in line:
+        if stage == 0 and 'Liste des sujets' in line:
             stage = 1
         elif stage == 1:
+            matched = regexp_category_title.search(line)
+            if matched is not None:
+                title = matched.group('title')
+                stage = 2
+        elif stage == 2 and '<table class="liste_cat">' in line:
+            stage = 3
+        elif stage == 3:
             matched = regexp_current_page.search(line)
             if matched is not None:
                 page = matched.group('page')
@@ -107,8 +115,8 @@ def category(request, id, page=None):
             if '<a href="#"' in line:
                 pages.append('...')
             if '</td>' in line:
-                stage = 2
-        elif stage == 2:
+                stage = 4
+        elif stage == 4:
             matched = regexp_topic_link.search(line)
             if matched is not None:
                 topic = Empty()
@@ -123,7 +131,8 @@ def category(request, id, page=None):
     return HttpResponse(render_template('sdz/forums/category.html', request,
                                         {'topics': topics,
                                          'page_ids': pages,
-                                         'page_id': page}))
+                                         'page_id': page,
+                                         'title': title}))
 
 def topic(request, id, page=None):
     opener = UrlOpener()
