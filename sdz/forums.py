@@ -97,6 +97,7 @@ def category(request, id, page=None):
         elif stage == 1:
             matched = regexp_current_page.search(line)
             if matched is not None:
+                page = matched.group('page')
                 pages.append(matched.group('page'))
                 continue
             matched = regexp_other_page.search(line)
@@ -121,7 +122,8 @@ def category(request, id, page=None):
                 break
     return HttpResponse(render_template('sdz/forums/category.html', request,
                                         {'topics': topics,
-                                         'page_ids': pages}))
+                                         'page_ids': pages,
+                                         'page_id': page}))
 
 def topic(request, id, page=None):
     opener = UrlOpener()
