@@ -38,8 +38,8 @@ import feedparser
 from django.http import Http404
 from django.http import HttpResponse
 
-from phonyproxy.common.templates import render_template
-from sdz.common import *
+from sdzpp.common.templates import render_template
+from phone.common import *
 
 SPLITTER = '" alt="" />'
 regexp_html_tag = re.compile(r'<.*?>')
@@ -66,7 +66,7 @@ def get_news_list():
     return news_list
 
 def index(request):
-    return HttpResponse(render_template('sdz/news/list.html', request,
+    return HttpResponse(render_template('phone/news/list.html', request,
                                         {'news_list': get_news_list()}))
 
 def show(request, news_id):
@@ -104,7 +104,7 @@ def show(request, news_id):
             content += line + '\n'
     content = content[0:-len('</div>\n')]
     content = zcode_parser(content)
-    return HttpResponse(render_template('sdz/news/view.html', request,
+    return HttpResponse(render_template('phone/news/view.html', request,
                                         {'title': title,
                                          'contributors': contributors,
                                          'content': content}))
@@ -176,7 +176,7 @@ def show_comments(request, news_id, page):
                 currentMessage = None
             else:
                 currentMessage.content += line + '\n'
-    return HttpResponse(render_template('sdz/news/view_comments.html', request,
+    return HttpResponse(render_template('phone/news/view_comments.html', request,
                                         {'title': title,
                                          'page_id': page,
                                          'page_ids': page_ids,

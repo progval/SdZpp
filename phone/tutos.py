@@ -37,8 +37,8 @@ import feedparser
 from django.http import Http404
 from django.http import HttpResponse
 
-from phonyproxy.common.templates import render_template
-from sdz.common import *
+from sdzpp.common.templates import render_template
+from phone.common import *
 
 regexp_tuto_link = re.compile(r'<a href="/tutoriel-3-(?P<id>[0-9]+)-[^>]+.html">(?P<name>[^<]+)</a>')
 regexp_tuto_cat_link = re.compile(r'<div class="infobox bouton_tuto">[^<]*<h3>(?P<name>[^<]+)</h3>[^<]*'
@@ -73,7 +73,7 @@ def index(request):
         tuto.id, tuto.name = raw_tuto
         tuto.name = tuto.name.strip()
         tutos.append(tuto)
-    return HttpResponse(render_template('sdz/tutos/index.html', request,
+    return HttpResponse(render_template('phone/tutos/index.html', request,
                                         {'tutos': tutos}))
 
 def list_subcategories(request, id):
@@ -95,7 +95,7 @@ def list_subcategories(request, id):
         category = Empty()
         category.name, category.mode, category.id, category.description = raw_category
         categories.append(category)
-    return HttpResponse(render_template('sdz/tutos/list_subcategories.html', request,
+    return HttpResponse(render_template('phone/tutos/list_subcategories.html', request,
                                         {'categories': categories}))
 
 def list_tutorials(request, id):
@@ -117,7 +117,7 @@ def list_tutorials(request, id):
         tutorial = Empty()
         tutorial.id, foo, tutorial.name, foo = raw_tutorial
         tutorials.append(tutorial)
-    return HttpResponse(render_template('sdz/tutos/list_tutorials.html', request,
+    return HttpResponse(render_template('phone/tutos/list_tutorials.html', request,
                                         {'tutorials': tutorials}))
 
 def view(request, id):
@@ -229,7 +229,7 @@ def view(request, id):
     intro = zcode_parser(intro)
     content = zcode_parser(content)
     assert tuto_type in ('mini', 'big')
-    return HttpResponse(render_template('sdz/tutos/view_%s_tuto.html' % tuto_type, request,
+    return HttpResponse(render_template('phone/tutos/view_%s_tuto.html' % tuto_type, request,
                                         {'title': title,
                                          'authors': authors,
                                          'license': license,

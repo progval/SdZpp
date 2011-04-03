@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}{{title}}{%endblock%}
 
@@ -7,7 +7,7 @@
 	Auteur(s) :
 	<ul>
 		{%for author in authors%}
-			<li><a href="/sdz/members/{{author.id}}/">{{author.name}}</a></li>
+			<li><a href="/phone/members/{{author.id}}/">{{author.name}}</a></li>
 		{%endfor%}
 	</ul>
 	Licence : {{license}}
@@ -20,10 +20,10 @@
 		<h2>Partie {{subpart.id}} : {{subpart.name}}</h2>
 		<dl>
 			{%for minituto in subpart.minitutos%}
-				<dt><a href="/sdz/tutos/view/{{minituto.id}}/">{{minituto.name}}</a></dt>
+				<dt><a href="/phone/tutos/view/{{minituto.id}}/">{{minituto.name}}</a></dt>
 				{%for minitutopart in minituto.subparts%}
 					{%autoescape off%}
-						<dd><a href="/sdz/tutos/view/{{minituto.id}}/#ss_part_{{subpart.id}}">{{subpart.name}}</a></dd>
+						<dd><a href="/phone/tutos/view/{{minituto.id}}/#ss_part_{{subpart.id}}">{{subpart.name}}</a></dd>
 					{%endautoescape%}
 				{%endfor%}
 			{%endfor%}

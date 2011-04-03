@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}Commentaires de news{%endblock%}
 
@@ -20,7 +20,7 @@
 	<hr />
 	{%for comment in comments%}
 		<div>
-			<a href="/sdz/members/{{comment.author.id}}/">{{comment.author.name}}</a>&nbsp;
+			<a href="/phone/members/{{comment.author.id}}/">{{comment.author.name}}</a>&nbsp;
 			Posté le {{comment.posted_on}}<br />
 			{% autoescape off %}
 				{{comment.content}}

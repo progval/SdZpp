@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}{{title}}{%endblock%}
 
@@ -7,7 +7,7 @@
 	Auteur(s) :
 	<ul>
 		{%for author in authors%}
-			<li><a href="/sdz/members/{{author.id}}/">{{author.name}}</a></li>
+			<li><a href="/phone/members/{{author.id}}/">{{author.name}}</a></li>
 		{%endfor%}
 	</ul>
 	Licence : {{license}}

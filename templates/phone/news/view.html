@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}{{title}} - news{%endblock%}
 
@@ -7,7 +7,7 @@
 	<p class="contributors">
 		News par :
 		{%for contributor in contributors%}
-			<a href="/sdz/members/{{contributor.id}}/">{{contributor.name}}</a>
+			<a href="/phone/members/{{contributor.id}}/">{{contributor.name}}</a>
 		{%endfor%}
 	</p>
 	<div class="news_body">

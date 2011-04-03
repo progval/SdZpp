@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%exends "phone/base.html"%}
 
 {%block title%}Cours{%endblock%}
 
@@ -7,9 +7,9 @@
 		{%for category in categories%}
 			<li>
 				{%if category.mode == "1"%}
-					<a href="/sdz/tutos/list/categories/{{category.id}}/">{{category.name}}</a>
+					<a href="/phone/tutos/list/categories/{{category.id}}/">{{category.name}}</a>
 				{%else%}
-					<a href="/sdz/tutos/list/tutorials/{{category.id}}/">{{category.name}}</a>
+					<a href="/phone/tutos/list/tutorials/{{category.id}}/">{{category.name}}</a>
 				{%endif%}
 				<br />
 				{%autoescape off%}

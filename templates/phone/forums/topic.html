@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}{{topic_title}} - topic{%endblock%}
 
@@ -17,7 +17,7 @@
 	{%endfor%}
 	{%for message in messages%}
 		<div>
-			<a href="/sdz/members/{{message.author.id}}/">{{message.author.name}}</a>&nbsp;
+			<a href="/phone/members/{{message.author.id}}/">{{message.author.name}}</a>&nbsp;
 			Posté {{message.posted_on}}<br />
 			{% autoescape off %}
 				{{message.content}}

@@ -1,0 +1,13 @@
+{%extends "phone/base.html"%}
+
+{%block title%}Cours{%endblock%}
+
+{%block body%}
+	<a href="/phone/tutos/list/categories/3/">Voir les tutoriels par catégorie</a>
+	<h1>Tutoriels mis en avant</h1>
+	<ul>
+		{%for tuto in tutos%}
+			<li><a href="/phone/tutos/view/{{tuto.id}}/">{{tuto.name}}</a></li>
+		{%endfor%}
+	</ul>
+{%endblock%}

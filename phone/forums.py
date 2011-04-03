@@ -36,8 +36,8 @@ import urllib2
 from django.http import Http404
 from django.http import HttpResponse
 
-from phonyproxy.common.templates import render_template
-from sdz.common import *
+from sdzpp.common.templates import render_template
+from phone.common import *
 
 regexp_big_cat = re.compile('<a href="forum-89-(?P<id>[0-9]+)-[^>]*.html">(?P<name>[^<]+)</a>')
 regexp_sub_cat = re.compile('<a href="forum-81-(?P<id>[0-9]+)-[^>]*.html">(?P<name>[^<]+)</a>')
@@ -79,7 +79,7 @@ def index(request):
             matched = regexp_sub_cat_desc.search(line)
             if matched is not None:
                 currentSubCategory.description += matched.group('description') + '\n'
-    return HttpResponse(render_template('sdz/forums/index.html', request,
+    return HttpResponse(render_template('phone/forums/index.html', request,
                                         {'categories': categories}))
 
 def category(request, id, page=None):
@@ -128,7 +128,7 @@ def category(request, id, page=None):
                 topics.append(topic)
             if '</table>' in line:
                 break
-    return HttpResponse(render_template('sdz/forums/category.html', request,
+    return HttpResponse(render_template('phone/forums/category.html', request,
                                         {'topics': topics,
                                          'page_ids': pages,
                                          'page_id': page,
@@ -197,7 +197,7 @@ def topic(request, id, page=None):
                 currentMessage = None
             else:
                 currentMessage.content += line + '\n'
-    return HttpResponse(render_template('sdz/forums/topic.html', request,
+    return HttpResponse(render_template('phone/forums/topic.html', request,
                                         {'messages': messages,
                                          'page_ids': pages,
                                          'page_id': page,

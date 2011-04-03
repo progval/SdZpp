@@ -4,7 +4,7 @@ import urllib
 
 from django.http import HttpResponse
 
-from phonyproxy.common.templates import render_template
+from sdzpp.common.templates import render_template
 
 regexp_smiley = re.compile(r'<img src="/?Templates/images/smilies/[^"]+" alt="([^"]+)"( class="smilies")?/>')
 regexp_member_link = re.compile(r'<a( class="auteur_tut")? href="membres-294-(?P<id>[0-9]+).html">'
@@ -15,7 +15,7 @@ class Empty:
     pass
 
 class UrlOpener(urllib.FancyURLopener):
-    version = 'PhonyProxy'
+    version = 'SdZpp'
 
 class Member:
     def __init__(self, matched):
@@ -30,4 +30,4 @@ def zcode_parser(code):
 
 def index(request):
     context = {}
-    return HttpResponse(render_template('sdz/index.html', request, context))
+    return HttpResponse(render_template('phone/index.html', request, context))

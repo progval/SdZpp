@@ -1,4 +1,4 @@
-{%extends "sdz/base.html"%}
+{%extends "phone/base.html"%}
 
 {%block title%}Forum{%endblock%}
 
@@ -14,7 +14,7 @@
 				<dl>
 					{%for subCategory in category.subCategories%}
 						<dt>
-							<a href="/sdz/forums/categories/{{subCategory.id}}/">
+							<a href="/phone/forums/categories/{{subCategory.id}}/">
 							{%autoescape off%}
 								{{subCategory.name}}
 							{%endautoescape%}

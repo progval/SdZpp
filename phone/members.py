@@ -36,8 +36,8 @@ import urllib2
 from django.http import Http404
 from django.http import HttpResponse
 
-from phonyproxy.common.templates import render_template
-from sdz.common import *
+from sdzpp.common.templates import render_template
+from phone.common import *
 
 regexp_basic_info = re.compile(r'<li><strong>(?P<name>[^:]*) : </strong>(?P<value>[^<]*)</li>')
 regexp_activity = re.compile(r'<strong>(?P<name>[^:]*) : </strong>(?P<value>[^<]*)')
@@ -77,7 +77,7 @@ def profile(request, id):
                 activity.append(block)
             elif '</div>' in line:
                 break
-    return HttpResponse(render_template('sdz/members/profile.html', request,
+    return HttpResponse(render_template('phone/members/profile.html', request,
                                         {'basic_infos': basic_infos,
                                          'pseudo': pseudo,
                                          'online': online,
