@@ -1,35 +1,35 @@
 function switch_spoiler_hidden(b) {
-				var c=b.parentNode.nextSibling.getElementsByTagName("div");
-				var a=c[0];
-				if(a.style.display=="") {
-								if(a.currentStyle) {
-												if(a.currentStyle.display=="block") {
-																a.style.display="block"
-											  }
-												else {
-																if(a.currentStyle.display=="none") {
-																				a.style.display="none"
-																}
-												}
-								}
-								else {
-												if(getComputedStyle(a,null).display=="block") {
-																a.style.display="block"
-												}
-												else {
-																if(getComputedStyle(a,null).display=="none") {
-																				a.style.display="none"
-																}
-												}
-								}
+	var c=b.parentNode.nextSibling.getElementsByTagName("div");
+	var a=c[0];
+	if(a.style.display=="") {
+		if(a.currentStyle) {
+			if(a.currentStyle.display=="block") {
+				a.style.display="block"
+			}
+			else {
+				if(a.currentStyle.display=="none") {
+					a.style.display="none"
 				}
-				if(a.style.display=="block") {
-								a.style.display="none"
+			}
+		}
+		else {
+			if(getComputedStyle(a,null).display=="block") {
+				a.style.display="block"
+			}
+			else {
+				if(getComputedStyle(a,null).display=="none") {
+					a.style.display="none"
 				}
-				else {
-								a.style.display="block"
-				}
-				return false
+			}
+		}
+	}
+	if(a.style.display=="block") {
+		a.style.display="none"
+	}
+	else {
+		a.style.display="block"
+	}
+	return false
 }
 
 document.write('<style type="text/css">');
