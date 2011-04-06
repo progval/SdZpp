@@ -14,7 +14,15 @@ class MinifyMiddleware:
                 if char not in ' ' or new_content[-1] not in ' ' or in_pre:
                     new_content += char
             response.content = new_content
-        elif response['content-type'].startswith('text/css') or \
-                response['content-type'].startswith('application/javascript'):
+        elif response['content-type'].startswith('text/css'):
             response.content = response.content.replace(' ', '').replace('\n', '').replace('\t', '')
+        elif response['content-type'].startswith('application/javascript'):
+            new_content = ''
+            for char in response.content:
+                if char in '\n\t':
+                    continue
+                if char != ' ' or new_content[-1] != ' ':
+                    new_content += char
+            new_content = new_content.replace(' {', '{')
+            response.content = new_content
         return response
