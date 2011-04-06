@@ -1,6 +1,5 @@
 class MinifyMiddleware:
     def process_response(self, request, response):
-        print repr(response['content-type'])
         # Yes, this function is not very pretty ;)
         if response['content-type'].startswith('text/html'):
             new_content = ''
