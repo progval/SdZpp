@@ -50,7 +50,7 @@ regexp_comments_page_link = re.compile(r'<a href=".*.html#discussion">(?P<id>[0-
 regexp_comments_current_page_link = re.compile(r'<span class="rouge">[0-9]+</span>')
 regexp_start_comment = re.compile(r'.*<div class="message_txt">(?P<message>.*)$')
 
-def get_news_list():
+def _index(request):
     feed = feedparser.parse('http://www.siteduzero.com/Templates/xml/news_fr.xml')
     news_list = []
     for entry in feed['entries']:
@@ -63,13 +63,13 @@ def get_news_list():
         news.id = regexp_id_in_news_link.match(entry['id']).group('id')
         news.title = entry['title_detail']['value']
         news_list.append(news)
-    return news_list
+    return {'news_list': news_list}
 
-def index(request):
+def index(request, **kwargs):
     return HttpResponse(render_template('phone/news/list.html', request,
-                                        {'news_list': get_news_list()}))
+                        _index(request, **kwargs)))
 
-def show(request, news_id):
+def _show(request, news_id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/news-62-%s-foo.html' % news_id)
     lines = response.read().split('\n')
@@ -104,12 +104,14 @@ def show(request, news_id):
             content += line + '\n'
     content = content[0:-len('</div>\n')]
     content = zcode_parser(content)
-    return HttpResponse(render_template('phone/news/view.html', request,
-                                        {'title': title,
-                                         'contributors': contributors,
-                                         'content': content}))
+    return {'title': title, 'contributors': contributors,
+            'content': content}
 
-def show_comments(request, news_id, page):
+def show(request, **kwargs):
+    return HttpResponse(render_template('phone/news/view.html', request,
+                        show(request, **kwargs)))
+
+def _show_comments(request, news_id, page):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/news-62-%s-p%s-foo.html'%
                            (news_id, page))
@@ -176,11 +178,12 @@ def show_comments(request, news_id, page):
                 currentMessage = None
             else:
                 currentMessage.content += line + '\n'
+    return {'title': title, 'page_id': page, 'page_ids': page_ids,
+            'comments': messages}
+
+def show_comment(request, **kwargs):
     return HttpResponse(render_template('phone/news/view_comments.html', request,
-                                        {'title': title,
-                                         'page_id': page,
-                                         'page_ids': page_ids,
-                                         'comments': messages}))
+                        _show_comment(request, **kwargs)))
 
 
 
