@@ -31,6 +31,8 @@ class MinifyMiddleware:
                 else:
                     last_char = char
             response.content = new_content
+            response['Expires'] = 'max-age=1500'
+            response['Cache-Control'] = 'max-age'
         elif response['content-type'].startswith('application/javascript'):
             new_content = ''
             for char in response.content:
@@ -40,5 +42,7 @@ class MinifyMiddleware:
                     new_content += char
             new_content = new_content.replace(' {', '{')
             response.content = new_content
+            response['Expires'] = 'max-age=1500'
+            response['Cache-Control'] = 'max-age'
         response['Content-Length'] = len(response.content)
         return response
