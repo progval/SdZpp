@@ -161,6 +161,7 @@ def _topic(request, id, page=None):
             matched = regexp_current_page.search(line)
             if matched is not None:
                 pages.append(matched.group('page'))
+                page = matched.group('page')
                 continue
             matched = regexp_other_page.search(line)
             if matched is not None:
