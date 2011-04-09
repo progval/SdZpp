@@ -11,7 +11,7 @@ class MinifyMiddleware:
                     in_pre = False
                 if char in '\n\t' and not in_pre:
                     continue
-                if char not in ' ' or new_content[-1] not in ' ' or in_pre:
+                if char != ' ' or new_content[-1] != ' ' or in_pre:
                     new_content += char
             response.content = new_content
         elif response['content-type'].startswith('text/css'):
