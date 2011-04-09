@@ -57,7 +57,6 @@ def _index(request):
         news = Empty()
         content = entry['summary_detail']['value']
         matched = regexp_news_logo.match(content)
-        print repr(content)
         assert matched is not None
         news.logo = matched.group('url')
         news.content = matched.group('content')
