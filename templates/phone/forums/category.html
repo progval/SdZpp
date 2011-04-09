@@ -6,10 +6,10 @@
 	<h1>{{title}}</h1>
 	{%for id in page_ids%}
 		{%if id == page_id%}
-			{{id}}
+			{{id}}&nbsp;
 		{%else%}
 			{%if id != '...'%}
-				<a href="./{{id}}">{{id}}</a>
+				<a href="./{{id}}">{{id}}</a>&nbsp;
 			{%else%}
 				…
 			{%endif%}
