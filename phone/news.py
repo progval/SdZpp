@@ -41,10 +41,10 @@ from django.http import HttpResponse
 from sdzpp.common.templates import render_template
 from phone.common import *
 
-SPLITTER = '" />'
 regexp_html_tag = re.compile(r'<.*?>')
 regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-(?P<id>[0-9]+)-.*.html')
 regexp_h1 = re.compile(r'<h1>(?P<title>.*)</h1>')
+regexp_news_logo = re.compile(r'<img( alt="")? src="(?P<url>http://uploads.siteduzero.com/[^"]+)"( alt="")? />(?P<content>.*)')
 regexp_start_news_comments = re.compile(r'<table class="liste_messages">')
 regexp_comments_page_link = re.compile(r'<a href=".*.html#discussion">(?P<id>[0-9]+)</a>')
 regexp_comments_current_page_link = re.compile(r'<span class="rouge">[0-9]+</span>')
@@ -56,10 +56,12 @@ def _index(request):
     for entry in feed['entries']:
         news = Empty()
         content = entry['summary_detail']['value']
-        splitted = content.split(SPLITTER)
-        news.logo = splitted[0][len('<img alt="" src="'):]
-        content = SPLITTER.join(splitted[1:])
-        news.short = regexp_html_tag.sub('', content)[0:140]
+        matched = regexp_news_logo.match(content)
+        print repr(content)
+        assert matched is not None
+        news.logo = matched.group('url')
+        news.content = matched.group('content')
+        news.short = regexp_html_tag.sub('', news.content)[0:140]
         news.id = regexp_id_in_news_link.match(entry['id']).group('id')
         news.title = entry['title_detail']['value']
         news_list.append(news)
