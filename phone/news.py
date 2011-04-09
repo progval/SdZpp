@@ -41,7 +41,7 @@ from django.http import HttpResponse
 from sdzpp.common.templates import render_template
 from phone.common import *
 
-SPLITTER = '" alt="" />'
+SPLITTER = '" />'
 regexp_html_tag = re.compile(r'<.*?>')
 regexp_id_in_news_link = re.compile(r'http://www.siteduzero.com/news-62-(?P<id>[0-9]+)-.*.html')
 regexp_h1 = re.compile(r'<h1>(?P<title>.*)</h1>')
@@ -57,7 +57,7 @@ def _index(request):
         news = Empty()
         content = entry['summary_detail']['value']
         splitted = content.split(SPLITTER)
-        news.logo = splitted[0][len('<img src="'):]
+        news.logo = splitted[0][len('<img alt="" src="'):]
         news.content = SPLITTER.join(splitted[1:])
         news.short = regexp_html_tag.sub('', news.content)[0:140]
         news.id = regexp_id_in_news_link.match(entry['id']).group('id')
