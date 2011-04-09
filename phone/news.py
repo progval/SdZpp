@@ -111,7 +111,7 @@ def _show(request, news_id):
 
 def show(request, **kwargs):
     return HttpResponse(render_template('phone/news/view.html', request,
-                        show(request, **kwargs)))
+                        _show(request, **kwargs)))
 
 def _show_comments(request, news_id, page):
     opener = UrlOpener()
