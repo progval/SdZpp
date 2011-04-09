@@ -58,8 +58,8 @@ def _index(request):
         content = entry['summary_detail']['value']
         splitted = content.split(SPLITTER)
         news.logo = splitted[0][len('<img alt="" src="'):]
-        news.content = SPLITTER.join(splitted[1:])
-        news.short = regexp_html_tag.sub('', news.content)[0:140]
+        content = SPLITTER.join(splitted[1:])
+        news.short = regexp_html_tag.sub('', content)[0:140]
         news.id = regexp_id_in_news_link.match(entry['id']).group('id')
         news.title = entry['title_detail']['value']
         news_list.append(news)
