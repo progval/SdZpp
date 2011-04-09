@@ -182,7 +182,7 @@ def _show_comments(request, news_id, page):
     return {'title': title, 'page_id': page, 'page_ids': page_ids,
             'comments': messages}
 
-def show_comment(request, **kwargs):
+def show_comments(request, **kwargs):
     return HttpResponse(render_template('phone/news/view_comments.html', request,
                         _show_comment(request, **kwargs)))
 
