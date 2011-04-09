@@ -184,7 +184,7 @@ def _show_comments(request, news_id, page):
 
 def show_comments(request, **kwargs):
     return HttpResponse(render_template('phone/news/view_comments.html', request,
-                        _show_comment(request, **kwargs)))
+                        _show_comments(request, **kwargs)))
 
 
 
