@@ -16,6 +16,21 @@ class MinifyMiddleware:
             response.content = new_content
         elif response['content-type'].startswith('text/css'):
             response.content = response.content.replace('\n', '').replace('  ', ' ').replace(' } ', '}').replace(' { ', '{').replace(';}', '}').replace(': ', ':').replace('; ', ';')
+            new_content = ''
+            in_comment = False
+            last_char = ''
+            for char in response.content:
+                if not in_comment and char == '*' and new_content.endswith('/'):
+                    in_comment = True
+                    new_content = new_content[0:-1]
+                elif in_comment and char == '/' and last_char == '*':
+                    in_comment = False
+                    new_content = new_content[0:-1]
+                elif not in_comment:
+                    new_content += char
+                else:
+                    last_char = char
+            response.content = new_content
         elif response['content-type'].startswith('application/javascript'):
             new_content = ''
             for char in response.content:
