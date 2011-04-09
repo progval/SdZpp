@@ -25,7 +25,6 @@ class MinifyMiddleware:
                     new_content = new_content[0:-1]
                 elif in_comment and char == '/' and last_char == '*':
                     in_comment = False
-                    new_content = new_content[0:-1]
                 elif not in_comment:
                     new_content += char
                 else:
