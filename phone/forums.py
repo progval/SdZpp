@@ -49,7 +49,7 @@ regexp_category_title = re.compile('<h1>(?P<title>.*)</h1>')
 regexp_topic_title = re.compile('<h1 class="titre_forum">(?P<title>.*)</h1>')
 regexp_start_message = re.compile(r'.*<div class="boite_message">(?P<message>.*)$')
 
-def index(request):
+def _index(request):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/forum.html')
     lines = response.read().split('\n')
@@ -79,10 +79,13 @@ def index(request):
             matched = regexp_sub_cat_desc.search(line)
             if matched is not None:
                 currentSubCategory.description += matched.group('description') + '\n'
-    return HttpResponse(render_template('phone/forums/index.html', request,
-                                        {'categories': categories}))
+    return {'categories': categories}
 
-def category(request, id, page=None):
+def index(request, **kwargs):
+    return HttpResponse(render_template('phone/forums/index.html', request,
+                        _index(request, **kwargs)))
+
+def _category(request, id, page=None):
     opener = UrlOpener()
     if page is None:
         response = opener.open('http://www.siteduzero.com/forum-81-%s-foo.html' % id)
@@ -128,13 +131,14 @@ def category(request, id, page=None):
                 topics.append(topic)
             if '</table>' in line:
                 break
-    return HttpResponse(render_template('phone/forums/category.html', request,
-                                        {'topics': topics,
-                                         'page_ids': pages,
-                                         'page_id': page,
-                                         'title': title}))
+    return {'topics': topics, 'page_ids': pages, 'page_id': page,
+            'title': title}
 
-def topic(request, id, page=None):
+def category(request, **kwargs):
+    return HttpResponse(render_template('phone/forums/category.html', request,
+                        _category(request, **kwargs)))
+
+def _topic(request, id, page=None):
     opener = UrlOpener()
     if page is None:
         response = opener.open('http://www.siteduzero.com/forum-83-%s-foo.html' % id)
@@ -197,8 +201,9 @@ def topic(request, id, page=None):
                 currentMessage = None
             else:
                 currentMessage.content += line + '\n'
+    return {'messages': messages, 'page_ids': pages, 'page_id': page,
+            'topic_title': topic_title}
+
+def topic(request, **kwargs):
     return HttpResponse(render_template('phone/forums/topic.html', request,
-                                        {'messages': messages,
-                                         'page_ids': pages,
-                                         'page_id': page,
-                                         'topic_title': topic_title}))
+                        _topic(request, **kwargs)))
