@@ -3,7 +3,7 @@ import re
 from django.test import TestCase
 from django.test.client import Client
 
-import common, forums
+import common, forums, news
 
 class testForum(TestCase):
     def testIndex(self):
@@ -59,3 +59,42 @@ class testForum(TestCase):
                 self.assertIn(name, message.__dict__)
                 self.assertIsInstance(message.author, common.Member)
                 self.assertNotEqual(message.content, '')
+
+class TestNews(TestCase):
+    def testIndex(self):
+        response = news._index(None)
+        self.assertIsInstance(response, dict)
+        self.assertIn('news_list', response)
+        news_list = response['news_list']
+        self.assertIsInstance(news_list, list)
+
+        for news_item in news_list:
+            for name in 'logo short id title'.split():
+                self.assertIn(name, news_item.__dict__)
+            self.assertTrue(re.match('[0-9]+', news_item.id))
+
+            self.assertTrue(news_item.logo.startswith('http://uploads.siteduzero.com/'),
+                            '\'%s\' does not start with http://uploads.siteduzero.com/' %
+                            news_item.logo)
+
+    def testShow(self):
+        response = news._show(None, '37914')
+        self.assertIsInstance(response, dict)
+        for name in 'title contributors content'.split():
+            self.assertIn(name, response)
+        self.assertIsInstance(response['contributors'], list)
+        for contributor in response['contributors']:
+            self.assertIsInstance(contributor, common.Member)
+        self.assertNotEqual(response['content'], '')
+
+    def testShowComments(self):
+        response = news._show_comments(None, '37914', '1')
+        self.assertIsInstance(response, dict)
+        for name in 'title page_id page_ids comments'.split():
+            self.assertIn(name, response)
+        self.assertIsInstance(response['comments'], list)
+        for comment in response['comments']:
+            for name in 'author posted_on content'.split():
+                self.assertIn(name, response.__dict__)
+            self.assertIsInstance(comment.author, common.Member)
+            self.assertNotEqual(comment.content, '')
