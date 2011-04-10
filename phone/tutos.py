@@ -53,7 +53,7 @@ regexp_bigtuto_minituto_link = re.compile(r'<a href="tutoriel-3-(?P<id>[0-9]+)-[
 regexp_bigtuto_minituto_name = re.compile(r'[0-9]+\) (?P<name>.*)$')
 
 
-def index(request):
+def _index(request):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-1-3-cours.html')
     lines = response.read().split('\n')
@@ -73,10 +73,13 @@ def index(request):
         tuto.id, tuto.name = raw_tuto
         tuto.name = tuto.name.strip()
         tutos.append(tuto)
-    return HttpResponse(render_template('phone/tutos/index.html', request,
-                                        {'tutos': tutos}))
+    return {'tutos': tutos}
 
-def list_subcategories(request, id):
+def index(request, **kwargs):
+    return HttpResponse(render_template('phone/tutos/index.html', request,
+                        _index(request, **kwargs)))
+
+def _list_subcategories(request, id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-1-%s-cours.html' % id)
     lines = response.read().split('\n')
@@ -95,10 +98,13 @@ def list_subcategories(request, id):
         category = Empty()
         category.name, category.mode, category.id, category.description = raw_category
         categories.append(category)
-    return HttpResponse(render_template('phone/tutos/list_subcategories.html', request,
-                                        {'categories': categories}))
+    return {'categories': categories}
 
-def list_tutorials(request, id):
+def list_subcategories(request, **kwargs):
+    return HttpResponse(render_template('phone/tutos/list_subcategories.html', request,
+                        _list_subcategories(request, **kwargs)))
+
+def _list_tutorials(request, id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-2-%s-cours.html' % id)
     lines = response.read().split('\n')
@@ -117,10 +123,13 @@ def list_tutorials(request, id):
         tutorial = Empty()
         tutorial.id, foo, tutorial.name, foo = raw_tutorial
         tutorials.append(tutorial)
-    return HttpResponse(render_template('phone/tutos/list_tutorials.html', request,
-                                        {'tutorials': tutorials}))
+    return {'tutorials': tutorials}
 
-def view(request, id):
+def list_tutorials(request, **kwargs):
+    return HttpResponse(render_template('phone/tutos/list_tutorials.html', request,
+                        _list_tutorials(request, **kwargs)))
+
+def _view(request, id):
     opener = UrlOpener()
     response = opener.open('http://www.siteduzero.com/tutoriel-3-%s-foo.html' % id)
     lines = response.read().split('\n')
@@ -229,12 +238,12 @@ def view(request, id):
     intro = zcode_parser(intro)
     content = zcode_parser(content)
     assert tuto_type in ('mini', 'big')
-    return HttpResponse(render_template('phone/tutos/view_%s_tuto.html' % tuto_type, request,
-                                        {'title': title,
-                                         'authors': authors,
-                                         'license': license,
-                                         'subparts': subparts,
-                                         'intro': intro,
-                                         'content': content}))
+    return (tuto_type, {'title': title, 'authors': authors, 'license': license,
+                        'subparts': subparts, 'intro': intro, 'content': content})
+
+def view(request, **kwargs):
+    tuto_type, data = _view(request, **kwargs)
+    return HttpResponse(render_template('phone/tutos/view_%s_tuto.html' % tuto_type,
+                        request, data))
 
 
