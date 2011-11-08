@@ -8,9 +8,18 @@ img.small {
 }
 
 #body {
- margin-top: 10px;
+    margin-top: 10px;
+    background-color: #C0C0C0;
+}
+a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
 
+a:hover {
+    text-decoration: underline;
+}
 /*******************************
  * Syntax coloration for zCode *
  *******************************/
